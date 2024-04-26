@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 
 const port = process.env.PORT || 5000;
@@ -37,11 +37,27 @@ async function run() {
     const tourismInfoDB = client.db('tourismInfoDB');
     const tourismSpotCollection = tourismInfoDB.collection('spot');
 
+
+
     app.post('/spots',async(req,res)=>{
         const newSpot = req.body;
         const result = await tourismSpotCollection.insertOne(newSpot);
         res.send(result);
         
+    });
+
+    app.get('/spots', async(req,res)=>{
+      const cursor = tourismSpotCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    });
+
+    app.get('/spots/:id',async (req,res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id) };
+      const result = await tourismSpotCollection.findOne(query);
+      res.send(result);
+      console.log(result);
     })
 
 
