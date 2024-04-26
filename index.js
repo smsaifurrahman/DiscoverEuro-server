@@ -116,13 +116,7 @@ async function run() {
       res.send(result)
     });
 
-    app.post('/countries',async(req,res)=>{
-      const newCountry = req.body;
-      const result = await countryCollection.insertOne(newCountry);
-      res.send(result);
-      
-  });
-
+    
 
 
 
