@@ -36,6 +36,7 @@ async function run() {
     await client.connect();
     const tourismInfoDB = client.db('tourismInfoDB');
     const tourismSpotCollection = tourismInfoDB.collection('spot');
+    const countryCollection = tourismInfoDB.collection('country');
 
 
 
@@ -51,14 +52,77 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result)
     });
+    app.get('/spots/email', async(req,res)=>{
+      const cursor = tourismSpotCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    });
+    
+    // Fetch data for specific user 
+    app.get('/spots/email/:email', async(req,res) =>{
+      const email = req.params.email;
+      const query = {userEmail: email};
+      const cursor =  tourismSpotCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result)
+      // console.log(cursor);
 
+    } );
+
+    // Delete a document
+    app.delete('/spots/:id',async (req,res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await tourismSpotCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    //Update a document
+    app.put('/spots/:id',async (req,res)=>{
+      const id = req.params.id;
+      const spot = req.body;
+      const options = {upsert: true}
+      const filter = {_id: new ObjectId(id)};
+      const updatedSpot = {
+        $set: {
+          image: spot.image,
+          spotName: spot.spotName,
+          countryName: spot.countryName,
+          location: spot.location,
+          description: spot.description,
+          averageCost: spot.averageCost,
+          seasonality: spot.seasonality,
+          totalVisitor: spot.totalVisitor
+        }
+      }
+      const result = await tourismSpotCollection.updateOne(filter,updatedSpot,options);
+      res.send(result)
+
+    })
+    
     app.get('/spots/:id',async (req,res)=>{
       const id = req.params.id;
       const query = {_id: new ObjectId(id) };
       const result = await tourismSpotCollection.findOne(query);
       res.send(result);
-      console.log(result);
-    })
+      // console.log(query);
+    });
+
+
+    // Code for Country Collection
+    app.get('/countries', async(req,res)=>{
+      const cursor = countryCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    });
+
+    app.post('/countries',async(req,res)=>{
+      const newCountry = req.body;
+      const result = await countryCollection.insertOne(newCountry);
+      res.send(result);
+      
+  });
+
 
 
 
