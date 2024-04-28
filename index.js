@@ -48,15 +48,43 @@ async function run() {
     });
 
     app.get('/spots', async(req,res)=>{
+      const query = req.query;
+      if(Object.keys(query).length > 0) {
+        const cursor = tourismSpotCollection.find().sort({averageCost: 1});
+        const result = await cursor.toArray();
+        res.send(result); 
+        
+      } else{
       const cursor = tourismSpotCollection.find();
       const result = await cursor.toArray();
-      res.send(result)
+      res.send(result);
+    
+      }
     });
+
+
+
     app.get('/spots/email', async(req,res)=>{
       const cursor = tourismSpotCollection.find();
       const result = await cursor.toArray();
       res.send(result)
     });
+
+    app.get('/spots/country', async(req,res)=>{
+      const cursor = tourismSpotCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    });
+
+    app.get('/spots/country/:country',async(req,res)=>{
+      const country = req.params.country;
+      const query = {countryName: country};
+      const cursor = tourismSpotCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+      // console.log(result);
+    })
+
     
     // Fetch data for specific user 
     app.get('/spots/email/:email', async(req,res) =>{
@@ -115,6 +143,12 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result)
     });
+
+    // app.get('/spots/country', async(req,res)=>{
+    //   const cursor = tourismSpotCollection.find();
+    //   const result = await cursor.toArray();
+    //   res.send(result)
+    // });
 
     
 
