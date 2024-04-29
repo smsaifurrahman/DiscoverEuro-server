@@ -33,7 +33,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     const tourismInfoDB = client.db('tourismInfoDB');
     const tourismSpotCollection = tourismInfoDB.collection('spot');
     const countryCollection = tourismInfoDB.collection('country');
@@ -49,10 +49,11 @@ async function run() {
 
     app.get('/spots', async(req,res)=>{
       const query = req.query;
-      if(Object.keys(query).length > 0) {
-        const cursor = tourismSpotCollection.find().sort({averageCost: 1});
+      if(Object.keys(query).length > 0  ) {
+        const cursor = tourismSpotCollection.find().sort({ averageCost: 1 });
         const result = await cursor.toArray();
-        res.send(result); 
+        res.send(result);
+        console.log(result);
         
       } else{
       const cursor = tourismSpotCollection.find();
@@ -157,7 +158,7 @@ async function run() {
 
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
