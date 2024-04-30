@@ -53,7 +53,7 @@ async function run() {
         const cursor = tourismSpotCollection.find().sort({ averageCost: 1 });
         const result = await cursor.toArray();
         res.send(result);
-        console.log(result);
+        // console.log(result);
         
       } else{
       const cursor = tourismSpotCollection.find();
