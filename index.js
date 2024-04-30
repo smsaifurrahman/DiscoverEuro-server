@@ -94,7 +94,7 @@ async function run() {
       const cursor =  tourismSpotCollection.find(query);
       const result = await cursor.toArray();
       res.send(result)
-      // console.log(cursor);
+      console.log(cursor);
 
     } );
 
